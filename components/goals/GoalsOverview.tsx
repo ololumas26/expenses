@@ -13,7 +13,7 @@ import Modal from "@/components/ui/Modal";
 import DatePickerField from "@/components/ui/DatePickerField";
 import GoalCard from "./GoalCard";
 
-export default function GoalsOverview() {
+function GoalsOverviewContent() {
     const searchParams = useSearchParams();
     const prefillName = searchParams.get("prefillName");
 
@@ -128,5 +128,13 @@ export default function GoalsOverview() {
                 </button>
             </Modal>
         </section>
+    );
+}
+
+export default function GoalsOverview() {
+    return (
+        <Suspense fallback={<p className="text-center text-sm text-tertiary/60">A carregar metas...</p>}>
+            <GoalsOverviewContent />
+        </Suspense>
     );
 }

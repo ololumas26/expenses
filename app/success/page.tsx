@@ -5,7 +5,7 @@
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
 
-export default function Componente() {
+function SuccessContent() {
   
   const [message, setMessage] = useState('A carregar...') 
   const params = useSearchParams()
@@ -47,9 +47,13 @@ export default function Componente() {
 
   }, [code, router]) 
 
-  return(
-    <Suspense>
-      <div>{message}</div>
+  return <div>{message}</div>
+}
+
+export default function Componente() {
+  return (
+    <Suspense fallback={<div>A carregar...</div>}>
+      <SuccessContent />
     </Suspense>
-    ) 
+  )
 }
