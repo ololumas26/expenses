@@ -1,7 +1,9 @@
 'use client'
 
+
+
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 
 export default function Componente() {
   
@@ -45,5 +47,9 @@ export default function Componente() {
 
   }, [code, router]) 
 
-  return <div>{message}</div>
+  return(
+    <Suspense>
+      <div>{message}</div>
+    </Suspense>
+    ) 
 }
