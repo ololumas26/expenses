@@ -16,6 +16,7 @@ const EMPTY_TOTALS = { totalIncome: 0, totalOutcome: 0, balance: 0 };
 type TotalsContextValue = typeof EMPTY_TOTALS & {
     loading: boolean;
     error: string | null;
+    balanceChange: number | null;
     refetch: () => Promise<void>;
     applyMovement: (type: MovementType, amount: number) => void;
 };
@@ -28,27 +29,40 @@ export function TotalsProvider({ children }: { children: ReactNode }) {
     const [totals, setTotals] = useState(EMPTY_TOTALS);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [balanceChange, setBalanceChange] = useState<number | null>(null);
 
     async function getTotals() {
         setLoading(true);
         setError(null);
 
         try {
-            const { data, error } = await supabase
-                .from("moviments_totals_view")
-                .select("total_income, total_outcome, balance")
-                .single();
+            const startOfMonth = new Date();
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
 
-            if (error) {
+            const [{ data, error }, { data: monthMovements, error: movementsError }] = await Promise.all([
+                supabase.from("moviments_totals_view").select("total_income, total_outcome, balance").single(),
+                supabase.from("moviments").select("amount, type").gte("mov_date", startOfMonth.toISOString()),
+            ]);
+
+            if (error || movementsError) {
                 setError("Não foi possível carregar os totais");
                 return;
             }
 
+            const balance = Number(data?.balance ?? 0);
+            const monthChange = (monthMovements ?? []).reduce(
+                (total, movement) => total + (movement.type === "income" ? Number(movement.amount) : -Number(movement.amount)),
+                0,
+            );
+            const previousBalance = balance - monthChange;
+
             setTotals({
                 totalIncome: Number(data?.total_income ?? 0),
                 totalOutcome: Number(data?.total_outcome ?? 0),
-                balance: Number(data?.balance ?? 0),
+                balance,
             });
+            setBalanceChange(previousBalance === 0 ? null : (monthChange / Math.abs(previousBalance)) * 100);
         } catch {
             setError("Não foi possível carregar os totais");
         } finally {
@@ -61,6 +75,7 @@ export function TotalsProvider({ children }: { children: ReactNode }) {
             getTotals();
         } else {
             setTotals(EMPTY_TOTALS);
+            setBalanceChange(null);
             setError(null);
             setLoading(false);
         }
@@ -76,7 +91,7 @@ export function TotalsProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <TotalsContext.Provider value={{ ...totals, loading, error, refetch: getTotals, applyMovement }}>
+        <TotalsContext.Provider value={{ ...totals, loading, error, balanceChange, refetch: getTotals, applyMovement }}>
             {children}
         </TotalsContext.Provider>
     );

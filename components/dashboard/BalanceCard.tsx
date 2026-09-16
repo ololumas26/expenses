@@ -9,7 +9,7 @@ import { useTotals } from "@/context/TotalsContext";
 export default function BalanceCard({ title }: { title?: string }){
 
     const [showBalance, setShowBalance] = useState(true)
-    const { balance, loading } = useTotals()
+    const { balance, balanceChange, loading } = useTotals()
 
     const EyeIcon = showBalance ?
      <Eye size={40} className="bg-border/30 rounded-full p-2"/>
@@ -30,7 +30,11 @@ export default function BalanceCard({ title }: { title?: string }){
                 </div>
                 <div className="flex items-center gap-2">
                     <TrendingUp size={30} className="bg-border/30 rounded-full p-2"/>
-                    <span className="text-sm">+3,3% em relação ao mês passado</span>
+                    <span className="text-sm">
+                        {balanceChange === null
+                            ? 'Sem dados do mês anterior'
+                            : `${balanceChange >= 0 ? '+' : ''}${balanceChange.toFixed(1).replace('.', ',')}% em relação ao mês passado`}
+                    </span>
                 </div>
             </div>
         </div>
