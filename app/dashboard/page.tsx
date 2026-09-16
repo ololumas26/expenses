@@ -19,10 +19,8 @@ export default async function DashboardPage(){
                 <div className="md:col-span-2">
                     <BalanceCard />
                     <QuickActions actions={quickActions} />
+                    <EmergencyCard />
                     <MovementList />
-                </div>
-                <div className="md:col-span-1">
-                    <EmergencyCard/>
                 </div>
             </div>
         </div>

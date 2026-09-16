@@ -13,7 +13,7 @@ export default function MovementList() {
     const { moviments, isLoading } = useMoviments("", 4);
 
     return (
-        <section aria-labelledby="movements-title" className="w-full max-w-md mx-auto my-4 px-3 pb-28 md:max-w-none md:px-0 md:pb-0">
+        <section aria-labelledby="movements-title" className="w-full max-w-md mx-auto mt-0 mb-4 px-3 pb-28 md:max-w-none md:px-0 md:pb-0">
             <div className="flex items-center justify-between gap-3 mb-2 px-1">
                 <h2 id="movements-title" className="text-xs font-semibold text-tertiary/60 uppercase tracking-wider">
                     Últimos movimentos
