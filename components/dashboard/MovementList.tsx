@@ -13,7 +13,7 @@ export default function MovementList() {
     const { moviments, isLoading } = useMoviments("", 4);
 
     return (
-        <section aria-labelledby="movements-title" className="w-full max-w-md mx-auto mt-0 mb-4 px-3 pb-28 md:max-w-none md:px-0 md:pb-0">
+        <section aria-labelledby="movements-title" className="w-full max-w-md mx-auto mt-0 mb-4 px-3 md:max-w-none md:px-0">
             <div className="flex items-center justify-between gap-3 mb-2 px-1">
                 <h2 id="movements-title" className="text-xs font-semibold text-tertiary/60 uppercase tracking-wider">
                     Últimos movimentos
@@ -24,7 +24,19 @@ export default function MovementList() {
             </div>
             <ul className="divide-y divide-border/60 border border-border/60 rounded-2xl px-3">
                 {isLoading && (
-                    <li className="py-6 text-center text-sm text-tertiary/60">A carregar...</li>
+                    Array.from({ length: 4 }).map((_, index) => (
+                        <li key={index} className="flex animate-pulse items-center gap-3 py-4">
+                            <div className="h-10 w-10 shrink-0 rounded-full bg-border/60" />
+                            <div className="min-w-0 flex-1 space-y-2">
+                                <div className="h-4 w-3/4 rounded bg-border/60" />
+                                <div className="h-3 w-1/2 rounded bg-border/60" />
+                            </div>
+                            <div className="space-y-2">
+                                <div className="ml-auto h-4 w-16 rounded bg-border/60" />
+                                <div className="ml-auto h-3 w-10 rounded bg-border/60" />
+                            </div>
+                        </li>
+                    ))
                 )}
                 {!isLoading && moviments.length === 0 && (
                     <li className="py-6 text-center text-sm text-tertiary/60">Ainda não há movimentos para mostrar.</li>

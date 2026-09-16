@@ -12,11 +12,24 @@ export default function EmergencyCard(){
     const { goals, isLoading } = useGoals()
     const goal = goals.find((item) => item.name.trim().toLowerCase() === EMERGENCY_RESERVE_GOAL_NAME.toLowerCase())
 
-    if (isLoading) return null
+    if (isLoading) {
+        return (
+            <section aria-label="A carregar reserva de emergência" className="w-full max-w-md mx-auto mt-4 mb-4 px-3 md:max-w-none md:px-0">
+                <div className="flex animate-pulse items-center gap-3 rounded-xl border border-border/60 p-4">
+                    <div className="h-10 w-10 shrink-0 rounded-full bg-border/60" />
+                    <div className="flex-1 space-y-2">
+                        <div className="h-4 w-40 rounded bg-border/60" />
+                        <div className="h-3 w-32 rounded bg-border/60" />
+                    </div>
+                    <div className="h-5 w-5 rounded bg-border/60" />
+                </div>
+            </section>
+        )
+    }
 
     if (!goal) {
         return (
-            <section className="w-full max-w-md mx-auto mt-4 mb-0 px-3 md:max-w-none md:px-0">
+            <section className="w-full max-w-md mx-auto mt-4 mb-4 px-3 md:max-w-none md:px-0">
                 <Link href={{ pathname: "/metas", query: { prefillName: EMERGENCY_RESERVE_GOAL_NAME } }} className="flex items-center gap-3 rounded-xl border border-dashed border-border/60 p-4 hover:bg-primary/5">
                     <span className="rounded-full bg-primary/15 p-2 text-primary"><PiggyBank size={18} aria-hidden="true" /></span>
                     <span className="flex-1">
@@ -32,7 +45,7 @@ export default function EmergencyCard(){
     const progress = goal.targetAmount > 0 ? Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100)) : 0
 
     return (
-        <section className="w-full max-w-md mx-auto mt-4 mb-0 px-3 md:max-w-none md:px-0">
+        <section className="w-full max-w-md mx-auto mt-4 mb-4 px-3 md:max-w-none md:px-0">
             <div className="border border-border/60 p-4 rounded-xl">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
